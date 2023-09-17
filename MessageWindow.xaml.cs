@@ -1,6 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
+using static appSplash.MainWindow;
 
 namespace appSplash
 {
@@ -9,20 +12,33 @@ namespace appSplash
     /// </summary>
     public partial class MessageWindow : Window
     {
-        public MessageWindow(string Name, string msgType, string msgText)
+        public MessageWindow(MainWindow mainForm, string Name, string msgType, string msgText)
         {
             InitializeComponent();
 
             Title = Name;
             textBox.Text = msgText;
 
+            Left = mainForm.Left + 10;
+            Top = mainForm.Top + mainForm.Height - Height - 10;
+
+            tmr = new DispatcherTimer();
+            tmr.Tick += (sender, e) =>
+            {
+                Fcn_UpdateIssue(button2, new RoutedEventArgs());
+            };
+            tmr.Interval = new TimeSpan(0, 0, 10);
+            tmr.Start();
+
             switch (msgType)
             {
                 case "Update":
                     button1.Content = "Sim";
                     button2.Content = "Não";
+                    
                     button1.Click += new RoutedEventHandler(Fcn_UpdateIssue);
                     button2.Click += new RoutedEventHandler(Fcn_UpdateIssue);
+
                     break;
 
                 case "Error":
@@ -35,6 +51,7 @@ namespace appSplash
 
         private void Fcn_UpdateIssue(object sender, RoutedEventArgs e)
         {
+            tmr.Stop();
             Hide();
 
             var mainForm = Application.Current.Windows.OfType<MainWindow>().First();
@@ -49,9 +66,6 @@ namespace appSplash
             Application.Current.Shutdown();
         }
 
-        private void Fcn_ClosingWindow(object sender, CancelEventArgs e)
-        {
-            e.Cancel = true;
-        }
+        private DispatcherTimer tmr;
     }
 }

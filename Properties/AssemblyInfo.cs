@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("appAnalise")]
+[assembly: AssemblyTitle("appColeta")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ANATEL")]
-[assembly: AssemblyProduct("appAnalise")]
-[assembly: AssemblyCopyright("Copyright © ANATEL 2022")]
+[assembly: AssemblyProduct("appColeta")]
+[assembly: AssemblyCopyright("Copyright © ANATEL 2023")]
 [assembly: AssemblyTrademark("Splash screen & installer")]
 [assembly: AssemblyCulture("")]
 

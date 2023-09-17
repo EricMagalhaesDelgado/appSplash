@@ -3,9 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Security.RightsManagement;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -21,40 +24,39 @@ namespace appSplash
             InitializeComponent();
 
             Globals.RootFolder = AppDomain.CurrentDomain.BaseDirectory;
-            Globals.localApp = JsonSerializer.Deserialize<appIntegrityInfo>(File.ReadAllText(Globals.RootFolder + "\\application\\Settings\\appIntegrity.json"));
+            Globals.localApp = JsonSerializer.Deserialize<appIntegrity>(File.ReadAllText(Globals.RootFolder + "\\application\\Settings\\appIntegrity.json"));
 
-            appTitle.Content = Globals.localApp.name;
-            appRelease.Content = Globals.localApp.release;
+            appTitle.Content = Globals.localApp.appName;
+            appRelease.Content = Globals.localApp.appRelease;
 
             Loaded += Startup;
         }
 
         private void Startup(object sender, EventArgs e)
         {
-            var appName = "appAnalise";
-
             // STABLE VERSION
-            Globals.stableApp.version = String.Empty;
-            Globals.stableApp.release = String.Empty;
+            Globals.stableApp.appVersion = String.Empty;
+            Globals.stableApp.appRelease = String.Empty;
 
             try
             {
                 using (WebClient wc = new WebClient())
                 {
-                    var webVersion = JsonDocument.Parse(wc.DownloadString(File.ReadAllText(Globals.RootFolder + "\\application\\Settings\\PublicLink.json")));
-                    var appVersion = JsonDocument.Parse(webVersion.RootElement.GetProperty(appName).ToString());
+                    var publicLinksObj   = JsonDocument.Parse(File.ReadAllText(Globals.RootFolder + "\\application\\Settings\\PublicLinks.json"));
+                    var versionFileObj   = JsonDocument.Parse(wc.DownloadString(publicLinksObj.RootElement.GetProperty("VersionFile").ToString()));
+                    var stableVersionObj = JsonDocument.Parse(versionFileObj.RootElement.GetProperty(Globals.localApp.appName).ToString());
 
-                    Globals.stableApp.version = appVersion.RootElement.GetProperty("Version").ToString();
-                    Globals.stableApp.release = appVersion.RootElement.GetProperty("ReleaseDate").ToString();
+                    Globals.stableApp.appVersion = stableVersionObj.RootElement.GetProperty("Version").ToString();
+                    Globals.stableApp.appRelease = stableVersionObj.RootElement.GetProperty("ReleaseDate").ToString();
                 }
             }
             catch (Exception) { }
 
 
             // LOCAL VERSION
-            if ((Globals.stableApp.version != "") && (Globals.stableApp.version != Globals.localApp.version))
+            if ((Globals.stableApp.appVersion != "") && (Globals.stableApp.appVersion != Globals.localApp.appVersion))
             {
-                var msgBox = new MessageWindow(Globals.localApp.name, "Update", String.Format("A versão local do {0} (v. {1}) difere da versão estável (v. {2}), a qual foi disponibilizada no dia {3}.\n\nDeseja instalar a versão estável do app?", appName, Globals.localApp.version, Globals.stableApp.version, Globals.stableApp.release));
+                var msgBox = new MessageWindow(this, Globals.localApp.appName, "Update", String.Format("A versão local do {0} (v. {1}) difere da versão estável (v. {2}), a qual foi disponibilizada no dia {3}.\n\nDeseja instalar a versão estável do app?", Globals.localApp.appName, Globals.localApp.appVersion, Globals.stableApp.appVersion, Globals.stableApp.appRelease));
                 msgBox.ShowDialog();
             }
             else
@@ -63,13 +65,13 @@ namespace appSplash
 
         public void Fcn_IntegrityCheck()
         {
-            var fPath = String.Format("{0}\\application\\{1}.exe", Globals.RootFolder, Globals.localApp.name);
+            var fPath = String.Format("{0}\\application\\{1}", Globals.RootFolder, Globals.localApp.fileName);
             var fInfo = new FileInfo(fPath);
 
             Globals.appHandle.StartInfo.UseShellExecute = false;
             Globals.appHandle.StartInfo.FileName = fPath;
 
-            if ((Globals.localApp.size == fInfo.Length) && (Globals.localApp.hash == Fcn_ComputeHash(fInfo)))
+            if ((Globals.localApp.fileSize == fInfo.Length) && (Globals.localApp.fileHash == Fcn_ComputeHash(fInfo)))
             {
                 Globals.tmr1.Tick += new EventHandler(Fcn_StartProcess);
                 Globals.tmr1.Interval = new TimeSpan(0, 0, 1);
@@ -83,7 +85,7 @@ namespace appSplash
             {
                 Fcn_Renderer("Processo de inicialização não finalizado.", false);
 
-                var msgBox = new MessageWindow(Globals.localApp.name, "Error", String.Format("O arquivo {0} não passou no teste de integridade.", fPath));
+                var msgBox = new MessageWindow(this, Globals.localApp.appName, "Error", String.Format("O arquivo {0} não passou no teste de integridade.", fPath));
                 msgBox.ShowDialog();
             }
         }
@@ -114,7 +116,7 @@ namespace appSplash
 
         private void Fcn_CheckProcess(object sender, EventArgs e)
         {
-            var appName = Globals.localApp.name + " " + Globals.localApp.release;
+            var appName = Globals.localApp.appName + " " + Globals.localApp.appRelease;
 
             foreach (Process CurrentProcess in Process.GetProcesses())
             {
@@ -133,25 +135,48 @@ namespace appSplash
         public void Fcn_UpdateProcess()
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() => { appStatus.Content = "Tentando atualizar a versão do app..."; }), DispatcherPriority.Render);
-            Thread.Sleep(100);
 
-            var zipDir = String.Format(@"{0}\Downloads\{1}_Matlab.zip", Environment.GetEnvironmentVariable("USERPROFILE"), Globals.localApp.name);
+            var zipDir = String.Format(@"{0}\Downloads\{1}_Matlab.zip", Environment.GetEnvironmentVariable("USERPROFILE"), Globals.localApp.appName);
             var oldDir = new DirectoryInfo(Globals.RootFolder + "\\application_old");
             var newDir = new DirectoryInfo(Globals.RootFolder + "\\application");
             bool Flag = false;
 
+            // Tentativa de apagar o diretório antigo, caso existente.
+            try
+            {
+                if (oldDir.Exists)
+                    Directory.Delete(oldDir.FullName, true);
+            }
+            catch (Exception exc) 
+            {
+                var msgBox = new MessageWindow(this, Globals.localApp.fileName, "Error", String.Format("O diretório {0} precisará ser apagado manualmente, uma vez que o Windows retornou o seguinte erro:\n{1}", oldDir.FullName, exc.Message));
+                msgBox.ShowDialog();
+
+                return;
+            }
+
             try
             {
                 using (WebClient wc = new WebClient())
-                    wc.DownloadFile(String.Format(@"https://github.com/EricMagalhaesDelgado/{0}/releases/download/{1}/{2}_Matlab.zip", Globals.localApp.name, Globals.stableApp.version, Globals.localApp.name), zipDir);
+                    wc.DownloadFile(String.Format(@"{0}/releases/download/{1}/{2}_Matlab.zip", Globals.localApp.codeRepo, Globals.stableApp.appVersion, Globals.localApp.appName), zipDir);
 
-                if (oldDir.Exists)
-                    Directory.Delete(oldDir.FullName, true);
                 Directory.Move(newDir.FullName, oldDir.FullName);
                 Flag = true;
 
                 ZipFile.ExtractToDirectory(zipDir, newDir.FullName);
+                Directory.CreateDirectory(Path.Combine(newDir.FullName, "Settings", "Default"));
 
+                foreach (string customFile in Globals.localApp.customFiles)
+                {
+                    string oldDirFullPath = Path.Combine(oldDir.FullName, "Settings", customFile);
+                    string newDirFullPath = Path.Combine(newDir.FullName, "Settings", customFile);
+                    string defaultDirFullPath = Path.Combine(newDir.FullName, "Settings", "Default", customFile);
+
+                    File.Move(newDirFullPath, defaultDirFullPath);
+                    File.Copy(oldDirFullPath, newDirFullPath, true);
+                }
+
+                Globals.localApp = JsonSerializer.Deserialize<appIntegrity>(File.ReadAllText(Globals.RootFolder + "\\application\\Settings\\appIntegrity.json"));
                 Fcn_IntegrityCheck();
             }
             catch (Exception exc)
@@ -168,7 +193,7 @@ namespace appSplash
 
                 Fcn_Renderer("Processo de atualização do app não finalizado.", false);
 
-                var msgBox = new MessageWindow(Globals.localApp.name, "Error", String.Format("O processo de atualização do app não foi finalizado, tendo sido indicada a seguinte mensagem de erro:\n{0}...", exc.Message));
+                var msgBox = new MessageWindow(this, Globals.localApp.fileName, "Error", String.Format("O processo de atualização do app não foi finalizado, uma vez que o Windows retornou o seguinte erro:\n{0}...", exc.Message));
                 msgBox.ShowDialog();
             }
         }
@@ -187,24 +212,26 @@ namespace appSplash
                     progressBar1.IsIndeterminate = false;
                 }
             }), DispatcherPriority.Render);
-            Thread.Sleep(1);
         }
 
-        public class appIntegrityInfo
+        public class appIntegrity
         {
-            public string name { get; set; }
-            public string release { get; set; }
-            public string version { get; set; }
-            public string hash { get; set; }
-            public double size { get; set; }
+            public string appName { get; set; }
+            public string appRelease { get; set; }
+            public string appVersion { get; set; }
+            public string codeRepo { get; set; }
+            public string[] customFiles { get; set; }
+            public string fileName { get; set; }
+            public string fileHash { get; set; }
+            public double fileSize { get; set; }
         }
 
         public class Globals
         {
             public static string RootFolder = "";
             public static Process appHandle = new Process();
-            public static appIntegrityInfo localApp = new appIntegrityInfo();
-            public static appIntegrityInfo stableApp = new appIntegrityInfo();
+            public static appIntegrity localApp = new appIntegrity();
+            public static appIntegrity stableApp = new appIntegrity();
             public static DispatcherTimer tmr1 = new DispatcherTimer();
             public static DispatcherTimer tmr2 = new DispatcherTimer();
         }

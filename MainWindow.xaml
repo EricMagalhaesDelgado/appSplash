@@ -5,13 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:appSplash"
         mc:Ignorable="d"
-        Title="appSplash" Height="320" Width="560" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" Background="#FF6199BA" WindowStyle="None" Topmost="True" Icon="/icon.png">
-    <Grid>
-        <Label x:Name="appTitle" Content="appSplash" HorizontalAlignment="Right" Margin="0,103,187,0" VerticalAlignment="Top" Foreground="White" FontSize="36" FontWeight="Bold" Width="288" HorizontalContentAlignment="Right"/>
-        <Label x:Name="appRelease" Content="R2022a" HorizontalAlignment="Left" Margin="322,0,0,0" VerticalAlignment="Center" Foreground="White"/>
-        <Button x:Name="CloseButton" HorizontalAlignment="Left" Margin="510,10,0,0" VerticalAlignment="Top" Height="40" Width="40" Click="Button_Click" Background="#FF6199BA" BorderBrush="#FF6199BA" Foreground="White" FontSize="16" FontFamily="Arial Unicode MS" Content="X"/>
-        <Image x:Name="logo" HorizontalAlignment="Left" Height="83" Margin="10,10,0,0" VerticalAlignment="Top" Width="87" Source="/puzzle.png"/>
-        <ProgressBar x:Name="progressBar1" HorizontalAlignment="Center" Height="16" VerticalAlignment="Top" Width="448" IsIndeterminate="True" Foreground="#FF88BB92" Margin="0,214,0,0"/>
-        <Label x:Name="appStatus" Content="Em andamento..." HorizontalAlignment="Left" Margin="52,230,0,0" VerticalAlignment="Top" Foreground="White"/>
+        Height="320" Width="560" Icon="/icons/icon.png" Background="#333333" 
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False"
+        WindowStyle="None" Topmost="True" Title="appColeta">
+
+    <Window.Resources>
+        <ResourceDictionary Source="/styles/styles.xaml" />
+    </Window.Resources>
+
+    <Grid Margin="1,1,1,1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="46"/>
+            <ColumnDefinition Width="41"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="46"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="34"/>
+            <RowDefinition Height="49"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="34"/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="logo" HorizontalAlignment="Stretch" Margin="9,9,0,0" VerticalAlignment="Stretch" Source="/icons/puzzle.png"/>
+        <Button Grid.Row="0" Grid.Column="3" x:Name="CloseButton" Style="{StaticResource CloseButton}" Click="Button_Click" Background="Transparent" BorderBrush="Transparent" Foreground="WhiteSmoke" FontSize="26" Content="×" Padding="0.5,-3.5,1,1"/>
+
+        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="appTitle" Content="appSplash" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="WhiteSmoke" FontSize="36" FontWeight="Bold" Width="288" HorizontalContentAlignment="Right"/>
+        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="appRelease" Content="R2022a" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="WhiteSmoke" Margin="0,50,0,0" />
+        <ProgressBar Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="progressBar1" HorizontalAlignment="Stretch" Height="12" VerticalAlignment="Top" IsIndeterminate="True" Foreground="#FF0C6927" Margin="0,168,0,0"/>
+        <Label Grid.Row="2" Grid.Column="1"  Grid.ColumnSpan="2" x:Name="appStatus" Content="Em andamento..." HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="WhiteSmoke" Margin="-5,178,0,0" />
     </Grid>
+
 </Window>
