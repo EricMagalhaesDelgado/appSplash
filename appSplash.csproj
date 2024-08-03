@@ -7,7 +7,7 @@
     <ProjectGuid>{F27A9CB8-80E3-4B30-9BBC-AAE869EF5E4A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>appSplash</RootNamespace>
-    <AssemblyName>appColeta</AssemblyName>
+    <AssemblyName>SCH</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -52,7 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icons/icon.ico</ApplicationIcon>
+    <ApplicationIcon>icons\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -160,13 +160,7 @@
     <Resource Include="icons\puzzle.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icons\icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="icons\info.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icons\icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="styles\styles.xaml">
@@ -185,6 +179,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\SCH.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\System.Text.Json.6.0.6\build\System.Text.Json.targets" Condition="Exists('packages\System.Text.Json.6.0.6\build\System.Text.Json.targets')" />
