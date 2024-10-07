@@ -30,7 +30,7 @@
         </Grid.RowDefinitions>
 
         <Image Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="/icons/info.png"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" Grid.RowSpan="2" x:Name="textBox" HorizontalAlignment="Stretch" Text="Uma coisa qualquer..." TextWrapping="Wrap" VerticalAlignment="Stretch" Padding="0,0,0,0" Background="Transparent" BorderBrush="Transparent" VerticalScrollBarVisibility="Hidden" AcceptsReturn="True" IsReadOnly="True" Focusable="False" AllowDrop="False" SelectionBrush="Transparent" Foreground="Black" IsHitTestVisible="False"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" Grid.RowSpan="2" x:Name="textBox" HorizontalAlignment="Stretch" Text="Uma coisa qualquer..." TextWrapping="Wrap" VerticalAlignment="Stretch" Padding="0,0,0,0" Background="Transparent" BorderBrush="Transparent" VerticalScrollBarVisibility="Hidden" AcceptsReturn="True" IsReadOnly="True" Focusable="False" AllowDrop="False" SelectionBrush="Transparent" Foreground="Black"/>
         <Button Grid.Row="3" Grid.Column="2" x:Name="button1" Style="{StaticResource RoundedEdgesButtonStyle}" Content="Sim" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Foreground="Black" BorderBrush="#7d7d7d"/>
         <Button Grid.Row="3" Grid.Column="4" x:Name="button2" Style="{StaticResource RoundedEdgesButtonStyle}" Content="Não" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Foreground="Black" BorderBrush="#7d7d7d"/>
     </Grid>
