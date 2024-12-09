@@ -30,8 +30,8 @@
         <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="logo" HorizontalAlignment="Stretch" Margin="9,9,0,0" VerticalAlignment="Stretch" Source="/icons/puzzle.png"/>
         <Button Grid.Row="0" Grid.Column="3" x:Name="CloseButton" Style="{StaticResource CloseButton}" Click="Button_Click" Background="Transparent" BorderBrush="Transparent" Foreground="WhiteSmoke" FontSize="26" Content="×" Padding="0.5,-3.5,1,1"/>
 
-        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="appTitle" Content="appAnalise" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="WhiteSmoke" FontSize="36" FontWeight="Bold" Width="288" HorizontalContentAlignment="Right"/>
-        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="appRelease" Content="R2024b" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="WhiteSmoke" Margin="0,50,0,0" />
+        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="appTitle" Content="appColeta" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="WhiteSmoke" FontSize="36" FontWeight="Bold" Width="288" HorizontalContentAlignment="Right"/>
+        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="appRelease" Content="R2024a" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="WhiteSmoke" Margin="0,50,0,0" />
         <ProgressBar Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="progressBar1" HorizontalAlignment="Stretch" Height="12" VerticalAlignment="Top" IsIndeterminate="True" Foreground="#FF0C6927" Margin="0,168,0,0"/>
         <Label Grid.Row="2" Grid.Column="1"  Grid.ColumnSpan="2" x:Name="appStatus" Content="Em andamento..." HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="WhiteSmoke" Margin="-5,178,0,0" />
     </Grid>
