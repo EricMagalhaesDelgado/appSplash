@@ -116,7 +116,7 @@ namespace appSplash
 
         private void Fcn_CheckProcess(object sender, EventArgs e)
         {
-            var appName = Globals.localApp.appName + " " + Globals.localApp.appRelease;
+            var appName = Globals.localApp.appName;
 
             foreach (Process CurrentProcess in Process.GetProcesses())
             {
