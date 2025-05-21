@@ -24,7 +24,7 @@ namespace appSplash
             InitializeComponent();
 
             Globals.RootFolder = AppDomain.CurrentDomain.BaseDirectory;
-            Globals.localApp = JsonSerializer.Deserialize<appIntegrity>(File.ReadAllText(Globals.RootFolder + "\\application\\Settings\\appIntegrity.json"));
+            Globals.localApp = JsonSerializer.Deserialize<appIntegrity>(File.ReadAllText(Globals.RootFolder + "\\application\\config\\appIntegrity.json"));
 
             appTitle.Content = Globals.localApp.appName;
             appRelease.Content = Globals.localApp.appRelease;
@@ -42,7 +42,7 @@ namespace appSplash
             {
                 using (WebClient wc = new WebClient())
                 {
-                    var publicLinksObj   = JsonDocument.Parse(File.ReadAllText(Globals.RootFolder + "\\application\\Settings\\PublicLinks.json"));
+                    var publicLinksObj   = JsonDocument.Parse(File.ReadAllText(Globals.RootFolder + "\\application\\config\\PublicLinks.json"));
                     var versionFileObj   = JsonDocument.Parse(wc.DownloadString(publicLinksObj.RootElement.GetProperty("VersionFile").ToString()));
                     var stableVersionObj = JsonDocument.Parse(versionFileObj.RootElement.GetProperty(Globals.localApp.appName).ToString());
 
@@ -164,19 +164,19 @@ namespace appSplash
                 Flag = true;
 
                 ZipFile.ExtractToDirectory(zipDir, newDir.FullName);
-                Directory.CreateDirectory(Path.Combine(newDir.FullName, "Settings", "Default"));
+                Directory.CreateDirectory(Path.Combine(newDir.FullName, "config", "Default"));
 
                 foreach (string customFile in Globals.localApp.customFiles)
                 {
-                    string oldDirFullPath = Path.Combine(oldDir.FullName, "Settings", customFile);
-                    string newDirFullPath = Path.Combine(newDir.FullName, "Settings", customFile);
-                    string defaultDirFullPath = Path.Combine(newDir.FullName, "Settings", "Default", customFile);
+                    string oldDirFullPath = Path.Combine(oldDir.FullName, "config", customFile);
+                    string newDirFullPath = Path.Combine(newDir.FullName, "config", customFile);
+                    string defaultDirFullPath = Path.Combine(newDir.FullName, "config", "Default", customFile);
 
                     File.Move(newDirFullPath, defaultDirFullPath);
                     File.Copy(oldDirFullPath, newDirFullPath, true);
                 }
 
-                Globals.localApp = JsonSerializer.Deserialize<appIntegrity>(File.ReadAllText(Globals.RootFolder + "\\application\\Settings\\appIntegrity.json"));
+                Globals.localApp = JsonSerializer.Deserialize<appIntegrity>(File.ReadAllText(Globals.RootFolder + "\\application\\config\\appIntegrity.json"));
                 Fcn_IntegrityCheck();
             }
             catch (Exception exc)
