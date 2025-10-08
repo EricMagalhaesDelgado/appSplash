@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ANATEL")]
-[assembly: AssemblyProduct("monitorRNI")]
+[assembly: AssemblyProduct("monitorSPED")]
 [assembly: AssemblyCopyright("Copyright © ANATEL 2025")]
 [assembly: AssemblyTrademark("Splash screen & installer")]
 [assembly: AssemblyCulture("")]
