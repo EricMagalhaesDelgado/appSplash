@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ANATEL")]
 [assembly: AssemblyProduct("appColeta")]
-[assembly: AssemblyCopyright("Copyright © ANATEL 2023")]
+[assembly: AssemblyCopyright("Copyright © ANATEL 2025")]
 [assembly: AssemblyTrademark("Splash screen & installer")]
 [assembly: AssemblyCulture("")]
 

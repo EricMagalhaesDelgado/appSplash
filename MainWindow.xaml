@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:appSplash"
         mc:Ignorable="d"
         Height="320" Width="560" Icon="/icons/icon.png" Background="#333333" 
-        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Title="appAnalise" WindowStyle="None">
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Title="appColeta" WindowStyle="None">
 
     <Window.Resources>
         <ResourceDictionary Source="/styles/styles.xaml" />
